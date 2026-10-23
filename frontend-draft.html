@@ -1,0 +1,1850 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SSG6000 系列射频信号源 FQC 质检操作规程与新手实操手册 - 鼎阳科技 SIGLENT</title>
+  <style>
+    :root {
+      --siglent-blue: #014099;
+      --siglent-blue-dark: #002b66;
+      --siglent-blue-light: #e8f1fc;
+      --siglent-blue-hover: #0252c2;
+      --siglent-orange: #f39800;
+      --siglent-orange-dark: #d48200;
+      --siglent-orange-light: #fff8eb;
+      --siglent-orange-border: #fbd692;
+      
+      --bg-page: #f4f6fa;
+      --bg-card: #ffffff;
+      --bg-card-subtle: #f8fafc;
+      --bg-contrast: #0f172a;
+      
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-light: #94a3b8;
+      
+      --border-color: #e2e8f0;
+      --border-subtle: #edf2f7;
+      
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --danger-border: #fecaca;
+      
+      --warning: #d97706;
+      --warning-bg: #fffbeb;
+      --warning-border: #fde68a;
+      
+      --success: #16a34a;
+      --success-bg: #f0fdf4;
+      --success-border: #bbf7d0;
+
+      --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --card-shadow-lg: 0 10px 25px -3px rgba(1, 64, 153, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+    }
+
+    [data-theme="dark"] {
+      --bg-page: #0b1120;
+      --bg-card: #131d33;
+      --bg-card-subtle: #192642;
+      --bg-contrast: #020617;
+      
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-light: #64748b;
+      
+      --border-color: #243556;
+      --border-subtle: #1b2944;
+      
+      --danger-bg: #450a0a;
+      --danger-border: #991b1b;
+      
+      --warning-bg: #451a03;
+      --warning-border: #92400e;
+      
+      --success-bg: #052e16;
+      --success-border: #166534;
+      
+      --siglent-blue-light: #162a52;
+      --siglent-orange-light: #3d2300;
+      --card-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      background-color: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.68;
+      transition: background-color 0.25s, color 0.25s;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 顶部导航条 */
+    .top-navbar {
+      background: linear-gradient(135deg, #021a40 0%, #014099 70%, #0056cc 100%);
+      color: #fff;
+      padding: 12px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+      border-bottom: 3px solid var(--siglent-orange);
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+
+    .brand-logo {
+      height: 38px;
+      width: auto;
+      display: block;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
+    }
+
+    .brand-divider {
+      width: 1px;
+      height: 24px;
+      background: rgba(255, 255, 255, 0.25);
+    }
+
+    .brand-title-group h2 {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-title-group p {
+      font-size: 11px;
+      color: #cbd5e1;
+      margin: 0;
+      letter-spacing: 0.3px;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-nav:hover {
+      background: rgba(255, 255, 255, 0.22);
+    }
+
+    .btn-action-primary {
+      background: var(--siglent-orange);
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 8px rgba(243, 152, 0, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn-action-primary:hover {
+      background: #e08b00;
+      transform: translateY(-1px);
+    }
+
+    /* 现场打卡控制台 Banner */
+    .progress-banner {
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 24px;
+      position: sticky;
+      top: 65px;
+      z-index: 900;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    .progress-container {
+      max-width: 1420px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .sn-input-group {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sn-input-group label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .sn-input {
+      padding: 5px 10px;
+      font-size: 13px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-weight: 700;
+      border: 1px solid var(--border-color);
+      background: var(--bg-page);
+      color: var(--text-main);
+      border-radius: var(--radius-sm);
+      width: 220px;
+      outline: none;
+    }
+    .sn-input:focus {
+      border-color: var(--siglent-blue);
+      box-shadow: 0 0 0 2px rgba(1, 64, 153, 0.15);
+    }
+
+    .progress-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .progress-tag {
+      background: var(--siglent-blue);
+      color: #fff;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .progress-bar-bg {
+      flex: 1;
+      min-width: 260px;
+      max-width: 420px;
+      height: 9px;
+      background: var(--border-color);
+      border-radius: 5px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--siglent-blue) 0%, var(--siglent-orange) 100%);
+      transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 5px;
+    }
+
+    .banner-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-small {
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      background: var(--bg-card);
+      color: var(--text-muted);
+      transition: all 0.15s;
+    }
+    .btn-small:hover {
+      background: var(--siglent-blue-light);
+      color: var(--siglent-blue);
+      border-color: var(--siglent-blue);
+    }
+
+    /* 页面主布局 */
+    .app-container {
+      max-width: 1420px;
+      margin: 20px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 290px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* 侧边快捷坞 */
+    .sidebar-wrapper {
+      position: sticky;
+      top: 130px;
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--card-shadow);
+      padding: 18px;
+      max-height: calc(100vh - 150px);
+      overflow-y: auto;
+    }
+
+    .sidebar-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--siglent-blue);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .search-box {
+      width: 100%;
+      padding: 8px 12px;
+      font-size: 12.5px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-page);
+      color: var(--text-main);
+      border-radius: var(--radius-sm);
+      margin-bottom: 14px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-box:focus {
+      border-color: var(--siglent-blue);
+      box-shadow: 0 0 0 2px rgba(1, 64, 153, 0.15);
+    }
+
+    .nav-links {
+      list-style: none;
+    }
+
+    .nav-links li {
+      margin-bottom: 4px;
+    }
+
+    .nav-links a {
+      display: block;
+      padding: 8px 10px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 12.5px;
+      border-radius: var(--radius-sm);
+      transition: all 0.15s ease;
+      line-height: 1.4;
+    }
+
+    .nav-links a:hover {
+      color: var(--siglent-blue);
+      background: var(--siglent-blue-light);
+    }
+
+    .nav-links a.active {
+      background: var(--siglent-blue);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* 参数速查 Dock */
+    .quick-dock {
+      margin-top: 18px;
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+    }
+
+    .quick-dock-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .dock-pill {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 6px 8px;
+      border-radius: 4px;
+      margin-bottom: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .dock-pill:hover {
+      border-color: var(--siglent-orange);
+      background: var(--siglent-orange-light);
+      transform: translateX(2px);
+    }
+
+    .dock-pill span.label {
+      color: var(--text-muted);
+    }
+
+    .dock-pill span.val {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-weight: 700;
+      color: var(--siglent-blue);
+    }
+
+    /* 主内容区 */
+    .main-content {
+      min-width: 0;
+    }
+
+    /* 文档主卡片 */
+    .doc-hero {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      padding: 30px 36px;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--card-shadow);
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .doc-hero::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--siglent-blue) 0%, var(--siglent-orange) 100%);
+    }
+
+    .badge-group {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      font-size: 11.5px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    .badge-sop {
+      background: var(--siglent-blue-light);
+      color: var(--siglent-blue);
+      border: 1px solid rgba(1, 64, 153, 0.25);
+    }
+
+    .badge-code {
+      background: var(--bg-card-subtle);
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+    }
+
+    .badge-warn {
+      background: var(--warning-bg);
+      color: var(--warning);
+      border: 1px solid var(--warning-border);
+    }
+
+    .doc-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 8px;
+      line-height: 1.35;
+    }
+
+    .doc-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 10px;
+      background: var(--bg-card-subtle);
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      font-size: 12.5px;
+    }
+
+    .meta-item span {
+      color: var(--text-light);
+      display: block;
+      font-size: 11px;
+      margin-bottom: 2px;
+    }
+
+    .meta-item strong {
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    /* 章节卡片 */
+    .section-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--card-shadow);
+      padding: 28px 34px;
+      margin-bottom: 24px;
+      scroll-margin-top: 135px;
+      position: relative;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 2px solid var(--border-subtle);
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+    }
+
+    .section-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-index {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--siglent-blue) 0%, var(--siglent-blue-hover) 100%);
+      color: #fff;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 14px;
+      box-shadow: 0 2px 6px rgba(1, 64, 153, 0.3);
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin: 0;
+    }
+
+    .btn-section-pass {
+      font-size: 12px;
+      font-weight: 700;
+      background: var(--siglent-blue-light);
+      color: var(--siglent-blue);
+      border: 1.5px solid var(--siglent-blue);
+      padding: 5px 12px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-section-pass:hover {
+      background: var(--siglent-blue);
+      color: #fff;
+      box-shadow: 0 2px 6px rgba(1, 64, 153, 0.3);
+    }
+
+    h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--siglent-blue);
+      margin: 22px 0 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    h3::before {
+      content: "";
+      display: inline-block;
+      width: 4px;
+      height: 14px;
+      background: var(--siglent-orange);
+      border-radius: 2px;
+    }
+
+    p {
+      font-size: 13.8px;
+      color: var(--text-main);
+      margin-bottom: 12px;
+      line-height: 1.68;
+    }
+
+    ul, ol {
+      font-size: 13.8px;
+      color: var(--text-main);
+      padding-left: 20px;
+      margin-bottom: 14px;
+    }
+
+    li {
+      margin-bottom: 6px;
+    }
+
+    /* ========================================================
+       复选框设计：默认彻底为空白，点击通过后呈现高亮绿勾
+       ======================================================== */
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 11px 15px;
+      margin-bottom: 8px;
+      background: var(--bg-card-subtle);
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+      user-select: none;
+    }
+
+    .check-item:hover {
+      background: var(--siglent-blue-light);
+      border-color: var(--siglent-blue);
+      transform: translateY(-1px);
+    }
+
+    /* 未勾选：完全为空白方框！ */
+    .check-box {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      border: 2px solid var(--text-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+      flex-shrink: 0;
+      background: var(--bg-card);
+      transition: all 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+    }
+
+    .check-icon {
+      width: 14px;
+      height: 14px;
+      stroke: #ffffff;
+      opacity: 0;
+      transform: scale(0.3);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      pointer-events: none;
+    }
+
+    /* 勾选通过后：鲜明绿底 + 白色高亮对勾 */
+    .check-item.checked {
+      background: var(--success-bg) !important;
+      border-color: var(--success-border) !important;
+    }
+
+    .check-item.checked .check-box {
+      background: var(--success) !important;
+      border-color: var(--success) !important;
+      box-shadow: 0 2px 5px rgba(22, 163, 74, 0.35);
+    }
+
+    .check-item.checked .check-icon {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .check-text {
+      font-size: 13.5px;
+      line-height: 1.52;
+      color: var(--text-main);
+      pointer-events: none;
+    }
+
+    .check-text strong {
+      color: var(--siglent-blue);
+    }
+    .check-item.checked .check-text strong {
+      color: var(--success);
+    }
+
+    /* 选件倒计时组件 */
+    .timer-card {
+      background: linear-gradient(135deg, #071a3d 0%, #014099 100%);
+      color: #fff;
+      border-radius: var(--radius-md);
+      padding: 18px 24px;
+      margin: 18px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 2px solid var(--siglent-orange);
+      box-shadow: 0 4px 15px rgba(1, 64, 153, 0.25);
+    }
+
+    .timer-info h4 {
+      font-size: 15px;
+      color: var(--siglent-orange);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .timer-info p {
+      font-size: 12.5px;
+      color: #cbd5e1;
+      margin: 0;
+    }
+
+    .timer-display-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .timer-digit {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 32px;
+      font-weight: 800;
+      color: #ffffff;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 4px 16px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      min-width: 90px;
+      text-align: center;
+    }
+
+    .timer-btn {
+      background: var(--siglent-orange);
+      color: #fff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .timer-btn:hover {
+      background: #e08b00;
+      transform: scale(1.02);
+    }
+
+    /* 工业警示框 Callouts */
+    .callout {
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      margin: 16px 0;
+      font-size: 13.5px;
+      border-left: 4px solid;
+    }
+
+    .callout-prohibit {
+      background: var(--danger-bg);
+      border-color: var(--danger);
+      color: #991b1b;
+    }
+    [data-theme="dark"] .callout-prohibit { color: #fca5a5; }
+
+    .callout-critical {
+      background: var(--warning-bg);
+      border-color: var(--siglent-orange);
+      color: #92400e;
+    }
+    [data-theme="dark"] .callout-critical { color: #fde68a; }
+
+    .callout-rule {
+      background: var(--success-bg);
+      border-color: var(--success);
+      color: #166534;
+    }
+    [data-theme="dark"] .callout-rule { color: #86efac; }
+
+    .callout-spec {
+      background: var(--siglent-blue-light);
+      border-color: var(--siglent-blue);
+      color: #1e40af;
+    }
+    [data-theme="dark"] .callout-spec { color: #93c5fd; }
+
+    .callout-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 700;
+      font-size: 12px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    /* SVG 拓扑图卡片 */
+    .diagram-box {
+      background: var(--bg-card-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin: 16px 0;
+      text-align: center;
+    }
+
+    .diagram-caption {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 8px;
+      font-weight: 500;
+    }
+
+    /* 代码与配置终端 */
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: var(--bg-card-subtle);
+      color: #c2410c;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+      border: 1px solid var(--border-color);
+      font-weight: 600;
+    }
+
+    .code-console {
+      background: #0f172a;
+      color: #38bdf8;
+      padding: 14px 18px;
+      border-radius: var(--radius-sm);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      margin: 14px 0;
+      border: 1px solid #1e293b;
+      position: relative;
+    }
+
+    .code-console .comment { color: #64748b; }
+    .code-console .val { color: #fbbf24; font-weight: 700; }
+    
+    .btn-copy {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+    .btn-copy:hover { background: rgba(255, 255, 255, 0.2); color: #fff; }
+
+    /* 表格 */
+    .table-container {
+      overflow-x: auto;
+      margin: 16px 0;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    th {
+      background: var(--bg-card-subtle);
+      color: var(--text-main);
+      font-weight: 700;
+      padding: 12px 14px;
+      border-bottom: 2px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:nth-child(even) {
+      background-color: var(--bg-card-subtle);
+    }
+
+    /* 避坑口诀海报 */
+    .poster-box {
+      background: linear-gradient(135deg, #071a3d 0%, #014099 100%);
+      color: #ffffff;
+      border-radius: var(--radius-md);
+      padding: 24px;
+      margin: 20px 0;
+      box-shadow: var(--card-shadow-lg);
+      border: 2px solid var(--siglent-orange);
+    }
+
+    .poster-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+      padding-bottom: 10px;
+    }
+
+    .poster-header h3 {
+      color: #fff;
+      font-size: 16px;
+      margin: 0;
+    }
+    .poster-header h3::before { display: none; }
+
+    .poster-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+    }
+
+    .rhyme-item {
+      background: rgba(255, 255, 255, 0.08);
+      border-left: 3px solid var(--siglent-orange);
+      padding: 10px 14px;
+      border-radius: 4px;
+      font-size: 13.5px;
+      font-weight: 500;
+    }
+
+    .rhyme-item strong {
+      color: var(--siglent-orange);
+      margin-right: 6px;
+    }
+
+    /* 状态指示点 */
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 6px;
+    }
+    .dot-danger { background: var(--danger); }
+    .dot-warning { background: var(--siglent-orange); }
+    .dot-success { background: var(--success); }
+    .dot-primary { background: var(--siglent-blue); }
+
+    /* 现代工业 Toast 浮动提示 */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 28px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: #0f172a;
+      color: #fff;
+      padding: 12px 18px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      border-left: 4px solid var(--siglent-orange);
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      animation: slideIn 0.25s ease-out forwards;
+      pointer-events: auto;
+      min-width: 260px;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 响应式与打印 */
+    @media (max-width: 992px) {
+      .app-container { grid-template-columns: 1fr; }
+      .sidebar-wrapper { display: none; }
+      .progress-container { flex-direction: column; align-items: stretch; }
+    }
+
+    @media print {
+      body { background: #fff !important; color: #000 !important; }
+      .top-navbar, .progress-banner, .sidebar-wrapper, .btn-action-primary, .timer-btn, .btn-copy, .btn-section-pass, .toast-container { display: none !important; }
+      .app-container { max-width: 100%; margin: 0; padding: 0; display: block; }
+      .doc-hero, .section-card { box-shadow: none !important; border: 1px solid #999 !important; margin-bottom: 16px !important; break-inside: avoid; }
+      .poster-box { background: #014099 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .print-sign-box { display: block !important; margin-top: 24px; padding: 14px; border: 1px solid #000; }
+    }
+
+    .print-sign-box {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 顶部导航条 -->
+  <header class="top-navbar">
+    <div class="nav-left">
+      <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAZAAAABkCAYAAACoy2Z3AAAACXBIWXMAAC4jAAAuIwF4pT92AAAGsmlUWHRYTUw6Y29tLmFkb2JlLnhtcAAAAAAAPD94cGFja2V0IGJlZ2luPSLvu78iIGlkPSJXNU0wTXBDZWhpSHpyZVN6TlRjemtjOWQiPz4gPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIgeDp4bXB0az0iQWRvYmUgWE1QIENvcmUgNi4wLWMwMDIgNzkuMTY0NDg4LCAyMDIwLzA3LzEwLTIyOjA2OjUzICAgICAgICAiPiA8cmRmOlJERiB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiPiA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtbG5zOnhtcE1NPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvbW0vIiB4bWxuczpzdEV2dD0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL3NUeXBlL1Jlc291cmNlRXZlbnQjIiB4bWxuczpwaG90b3Nob3A9Imh0dHA6Ly9ucy5hZG9iZS5jb20vcGhvdG9zaG9wLzEuMC8iIHhtbG5zOmRjPSJodHRwOi8vcHVybC5vcmcvZGMvZWxlbWVudHMvMS4xLyIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgMjIuMCAoV2luZG93cykiIHhtcDpDcmVhdGVEYXRlPSIyMDI1LTExLTIxVDE3OjIwOjA4KzA4OjAwIiB4bXA6TWV0YWRhdGFEYXRlPSIyMDI1LTExLTIxVDE3OjIwOjA4KzA4OjAwIiB4bXA6TW9kaWZ5RGF0ZT0iMjAyNS0xMS0yMVQxNzoyMDowOCswODowMCIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDo2OWVjMzYwNC05MmI1LTQ0NDEtYjdiOS0wOTE2ZTcxYTFmNjIiIHhtcE1NOkRvY3VtZW50SUQ9ImFkb2JlOmRvY2lkOnBob3Rvc2hvcDo0ZDE0ZTE3Ny1iYTNiLWEyNGYtOWU5ZS00OWViN2NkNzY5ZjQiIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo2ZTRmNWY3Mi0xMzAzLTU0NGMtODEwMy1hZjNiM2RjNThiM2IiIHBob3Rvc2hvcDpDb2xvck1vZGU9IjMiIGRjOmZvcm1hdD0iaW1hZ2UvcG5nIj4gPHhtcE1NOkhpc3Rvcnk+IDxyZGY6U2VxPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0iY3JlYXRlZCIgc3RFdnQ6aW5zdGFuY2VJRD0ieG1wLmlpZDo2ZTRmNWY3Mi0xMzAzLTU0NGMtODEwMy1hZjNiM2RjNThiM2IiIHN0RXZ0OndoZW49IjIwMjUtMTEtMjFUMTc6MjA6MDgrMDg6MDAiIHN0RXZ0OnNvZnR3YXJlQWdlbnQ9IkFkb2JlIFBob3Rvc2hvcCAyMi4wIChXaW5kb3dzKSIvPiA8cmRmOmxpIHN0RXZ0OmFjdGlvbj0ic2F2ZWQiIHN0RXZ0Omluc3RhbmNlSUQ9InhtcC5paWQ6NjllYzM2MDQtOTJiNS00NDQxLWI3YjktMDkxNmU3MWExZjYyIiBzdEV2dDp3aGVuPSIyMDI1LTExLTIxVDE3OjIwOjA4KzA4OjAwIiBzdEV2dDpzb2Z0d2FyZUFnZW50PSJBZG9iZSBQaG90b3Nob3AgMjIuMCAoV2luZG93cykiIHN0RXZ0OmNoYW5nZWQ9Ii8iLz4gPC9yZGY6U2VxPiA8L3htcE1NOkhpc3Rvcnk+IDxwaG90b3Nob3A6RG9jdW1lbnRBbmNlc3RvcnM+IDxyZGY6QmFnPiA8cmRmOmxpPmFkb2JlOmRvY2lkOnBob3Rvc2hvcDo5NzA3ZDU3Yi05MmIzLTg2NGMtYWFjZC01MTNjODNjYzI1YTE8L3JkZjpsaT4gPHJkZjpsaT5hZG9iZTpkb2NpZDpwaG90b3Nob3A6ZDYyNWJhM2YtZTFkYS1lNDRhLTkxNzgtZjU3YzEyNGE2ODliPC9yZGY6bGk+IDwvcmRmOkJhZz4gPC9waG90b3Nob3A6RG9jdW1lbnRBbmNlc3RvcnM+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+RzYtAgAAJWBJREFUeJztnXecFOX5wL8z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" alt="SIGLENT 鼎阳科技" class="brand-logo" />
+      <div class="brand-divider"></div>
+      <div class="brand-title-group">
+        <h2>质量保证部 · FQC 质检中心</h2>
+        <p>SIGLENT TECHNOLOGIES QUALITY CONTROL SYSTEM</p>
+      </div>
+    </div>
+    <div class="nav-right">
+      <button class="btn-nav" id="themeToggle" onclick="toggleTheme()">
+        🌙 切换暗色模式
+      </button>
+      <button class="btn-action-primary" onclick="window.print()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+        打印 / 导出 SOP
+      </button>
+    </div>
+  </header>
+
+  <!-- 现场实操打卡控制台 Banner -->
+  <div class="progress-banner">
+    <div class="progress-container">
+      <div class="sn-input-group">
+        <label for="snInput">待测机 SN：</label>
+        <input type="text" id="snInput" class="sn-input" placeholder="扫码枪录入或手动输入..." oninput="saveCurrentSN()">
+      </div>
+
+      <div class="progress-info">
+        <span class="progress-tag" id="statusBadge">检验中</span>
+        <span>完成度：<strong id="progressText" style="color: var(--siglent-orange);">0 / 22 项 (0%)</strong></span>
+      </div>
+
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressBar"></div>
+      </div>
+
+      <div class="banner-actions">
+        <button class="btn-small" onclick="exportReport()">
+          📋 复制合格卡
+        </button>
+        <button class="btn-small" onclick="resetChecklist()">
+          🔄 下一台 / 重置
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="app-container">
+
+    <!-- 侧边导航与速查坞 -->
+    <aside class="sidebar-wrapper">
+      <div class="sidebar-title">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+        SOP 规程索引
+      </div>
+      <input type="text" id="filterInput" class="search-box" placeholder="🔍 检索操作步骤/关键字..." onkeyup="filterContent()">
+      <ul class="nav-links" id="navList">
+        <li><a href="#sec-1" class="active">1. 检验准备与工位环境</a></li>
+        <li><a href="#sec-2">2. 系统信息与 BOM 核查</a></li>
+        <li><a href="#sec-3">3. 静态外观与机械结构检查</a></li>
+        <li><a href="#sec-4">4. 自动化脚本测试与网络避坑</a></li>
+        <li><a href="#sec-5">5. 出厂文件清理与底层配置</a></li>
+        <li><a href="#sec-6">6. 选件授权与整机自检复位</a></li>
+        <li><a href="#sec-7">7. 外观防护与 QCS 系统过站</a></li>
+        <li><a href="#sec-8">8. 核心附录：口诀与权责矩阵</a></li>
+      </ul>
+
+      <!-- 工位关键参数秒查 Dock -->
+      <div class="quick-dock">
+        <div class="quick-dock-title">
+          <span>⚡ 核心参数秒查</span>
+          <span style="font-size: 10px; color: var(--siglent-orange);">点击复制</span>
+        </div>
+        <div class="dock-pill" onclick="copyValue('10.11.20.155')">
+          <span class="label">静态 IP (尾号)</span>
+          <span class="val">10.11.20.155</span>
+        </div>
+        <div class="dock-pill" onclick="copyValue('255.255.255.0')">
+          <span class="label">子网掩码</span>
+          <span class="val">255.255.255.0</span>
+        </div>
+        <div class="dock-pill" onclick="copyValue('261.77')">
+          <span class="label">波形目录容量</span>
+          <span class="val">261.77 MB</span>
+        </div>
+        <div class="dock-pill" onclick="copyValue('8')">
+          <span class="label">内置模型文件</span>
+          <span class="val">8 个文件</span>
+        </div>
+        <div class="dock-pill" onclick="copyValue('18')">
+          <span class="label">整机外壳螺丝</span>
+          <span class="val">18 颗</span>
+        </div>
+        <div class="dock-pill" onclick="copyValue('1.2.0.76.6')">
+          <span class="label">基准固件版本</span>
+          <span class="val">1.2.0.76.6</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+
+      <!-- Hero 概览卡片 -->
+      <section class="doc-hero">
+        <div class="badge-group">
+          <span class="badge badge-sop">STANDARD OPERATING PROCEDURE</span>
+          <span class="badge badge-code">SGL-QC-SOP-6080A</span>
+          <span class="badge badge-warn">现场实操红线版</span>
+        </div>
+        <h1 class="doc-title">SSG6000 系列射频信号源 FQC 质检操作规程与新手实操手册</h1>
+        <p class="doc-desc">基于鼎阳车间资深工序师傅手把手带教经验整理。包含完整 BOM 比对、静态外观、LAN 脚本避坑、出厂交付波形核验与 QCS 过站全流程，并提供工位实操交互打卡。</p>
+        
+        <div class="meta-grid">
+          <div class="meta-item">
+            <span>适用仪器型号</span>
+            <strong>SSG6080A / SSG6082A-V 系列</strong>
+          </div>
+          <div class="meta-item">
+            <span>责任部门 / 工位</span>
+            <strong>品质保证部 · FQC 出厂检验工位</strong>
+          </div>
+          <div class="meta-item">
+            <span>固件基线版本</span>
+            <strong>V1.2.0.76.6 （或以最新工单为准）</strong>
+          </div>
+          <div class="meta-item">
+            <span>核心网络通信</span>
+            <strong>LAN 静态网口（统一锁死 10.11.20.155）</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- 第一节 -->
+      <section class="section-card" id="sec-1">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-index">01</div>
+            <h2 class="section-title">检验准备与工位环境规范</h2>
+          </div>
+          <button class="btn-section-pass" onclick="passSection('sec-1')">⚡ 本节全检通过</button>
+        </div>
+
+        <h3>1.1 辅助仪器与台面设备状态确认</h3>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>主测示波器 (SDS5000X)</strong>：保持通电开机，后面板 USB 通信线与工控测试电脑保持稳定连接。</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>辅助示波器 (SDS1054X)</strong>：平时必须保持<strong>关机断电</strong>；若开机，必须<strong>拔除后部 USB 线</strong>（防止脚本误抓从机）。</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>工装治具与保护耗材</strong>：准备独立选件 U 盘、标准普通 U 盘、射频黑色胶帽、提手防拆封签。</div>
+        </div>
+
+        <div class="callout callout-prohibit">
+          <div class="callout-tag">
+            <span class="status-dot dot-danger"></span>
+            PROHIBITED · 绝对禁忌：摆放余量与防指纹氧化
+          </div>
+          <p><strong>1. 严禁徒手触摸后盖板：</strong><strong>绝对禁止直接用裸手直接触摸后盖板金属表面</strong>！人体手汗及油脂极难擦除，极易造成后盖板金属表面氧化生锈、变色发乌，导致整机外观降级不合格。</p>
+          <p><strong>2. 机身后部必须留足空间余量：</strong>请将待测机稍微向工作台操作外侧平移，确保机器后部有充裕的接线插拔空间。<strong>严禁死折、大角度挤压射频线缆与测试网线</strong>，过度弯折会导致精密射频线内部微波同轴结构损伤，影响高频测试精度并严重折损昂贵线缆寿命！</p>
+        </div>
+      </section>
+
+      <!-- 第二节 -->
+      <section class="section-card" id="sec-2">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-index">02</div>
+            <h2 class="section-title">第一阶段：系统信息与 BOM 结构核查（工单比对）</h2>
+          </div>
+          <button class="btn-section-pass" onclick="passSection('sec-2')">⚡ 本节全检通过</button>
+        </div>
+
+        <h3>2.1 系统登录与工单检索</h3>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>鼎阳云平台样机扫码</strong>：<code>品质检查 &rarr; 整机工序检查 &rarr; 样机查询</code>，扫待测机二维码调出生产信息。</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>数磊 MES 工单 BOM 查询</strong>：<code>生产管理 &rarr; 工单序号查询 / BOM 信息扫描查询</code>，使用 <code>Ctrl + F</code> 调出物料图纸。</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>新老款后盖板辨识</strong>：老款 1 个 U 型孔位，新款 2 个 U 型孔位。若投老料装新款，<strong>必查工单“生产备注”代用批准</strong>。</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>SN 与硬件 ID 比对</strong>：通过 <code>\Windows 2-236</code> 下的 <code>SN-ID uploader</code> 扫码，核实机身 ID 与云平台 100% 吻合。</div>
+        </div>
+
+        <div class="callout callout-critical">
+          <div class="callout-tag">
+            <span class="status-dot dot-warning"></span>
+            CRITICAL · 新老后盖板核查准则
+          </div>
+          严格以工单投料为准。如果工单投料编码为老款，但实际机身装配了新款，<strong>必须第一时间查阅工单中的“生产备注”</strong>是否有工程代用/变更批准说明；无说明者不可擅自放行。
+        </div>
+      </section>
+
+      <!-- 第三节 -->
+      <section class="section-card" id="sec-3">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-index">03</div>
+            <h2 class="section-title">第二阶段：静态外观与机械结构检查（断电状态）</h2>
+          </div>
+          <button class="btn-section-pass" onclick="passSection('sec-3')">⚡ 本节全检通过</button>
+        </div>
+
+        <p>在接电前，逐项完成以下结构点检：</p>
+
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>后盖板与螺丝</strong>：整机 18 颗固定螺丝齐全锁紧；严禁徒手触摸后盖板。</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>前面板与面膜</strong>：丝印清晰无断线无划痕；提手面板贴合平整，无气泡翘边。</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>四个机身脚垫</strong>：手动轻晃四个底座脚垫，螺栓必须紧固锁死，桌面放置平稳无晃动。</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>接口螺母与接地端子</strong>：后面板 BNC/SMA 螺母拧紧；接地端子螺栓锁紧且打扣到位。</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>开关按键朝向</strong>：核对开关按键圆点（○ 标识）方向是否符合标准（进入 <code>2245</code> 查样机色图确认）。</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>风扇网罩铆钉与 OCXO</strong>：铆钉必须完全冲压平整贴合，无凸起翘边；确认带 A 系列标配 OCXO。</div>
+        </div>
+      </section>
+
+      <!-- 第四节 -->
+      <section class="section-card" id="sec-4">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-index">04</div>
+            <h2 class="section-title">第三阶段：自动化脚本性能测试（网络配置与核心避坑）</h2>
+          </div>
+          <button class="btn-section-pass" onclick="passSection('sec-4')">⚡ 本节全检通过</button>
+        </div>
+
+        <div class="callout callout-spec">
+          <div class="callout-tag">
+            <span class="status-dot dot-primary"></span>
+            SPECIFICATION · 师傅私授：专机网口通信模式
+          </div>
+          SSG6000 系列质检自动化脚本<strong>采用 LAN 网口通信连接，而不是 USB 连接待测机</strong>！车间已固定统一网段与配置规范，若按常规机型插 USB 跑脚本将极难适配驱动。
+        </div>
+
+        <h3>4.1 待测机静态 IP 配置（每次跑机前必查）</h3>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>待测机静态 IP 设置</strong>：按 <code>Utility &rarr; Interface</code>，关闭 DHCP，IP 设为 <code>10.11.20.155</code>，子网掩码 <code>255.255.255.0</code>，网关 <code>10.11.20.1</code>。</div>
+        </div>
+
+        <div class="code-console">
+          <button class="btn-copy" onclick="copyValue('10.11.20.155')">📋 复制 IP</button>
+<span class="comment"># 鼎阳 SSG6000 专用质检静态网络配置参数</span>
+IP Address  : <span class="val">10.11.20.155</span>   <span class="comment"># ⚠️ 必须严格设为 155，不可填 154 等其他任何地址</span>
+Subnet Mask : <span class="val">255.255.255.0</span>
+Gateway     : <span class="val">10.11.20.1</span>
+        </div>
+
+        <div class="callout callout-prohibit">
+          <div class="callout-tag">
+            <span class="status-dot dot-danger"></span>
+            PROHIBITED · 致命避坑红线：测试项勾选规则
+          </div>
+          在脚本测试项界面点击【全选】后，<strong>必须手动取消勾选【网口设置 / LAN Test】！</strong><br>
+          <strong>致命原因：</strong>生产调试已对网口进行全功能测试；若质检脚本勾选测网口，脚本会自动改写待测机网络参数，导致当前 <code>.155</code> 通信连接瞬时断开，测试直接崩溃中断！
+        </div>
+
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>脚本测试项取消勾选网口</strong>：全选测试项后，<strong>必须手动取消勾选【网口设置 / LAN Test】</strong>，防通信中断。</div>
+        </div>
+
+        <!-- 端口接线拓扑示意图 (SVG 矢量绘制) -->
+        <h3>4.2 仪器接线拓扑示意图</h3>
+        <div class="diagram-box">
+          <svg viewBox="0 0 760 210" style="width: 100%; max-width: 720px; height: auto;" xmlns="http://www.w3.org/2000/svg">
+            <rect x="20" y="30" width="310" height="150" rx="8" fill="#1e293b" stroke="#014099" stroke-width="2.5"/>
+            <text x="175" y="55" fill="#f8fafc" font-size="13" font-weight="700" text-anchor="middle">SSG6080A 待测机 (后面板)</text>
+            
+            <circle cx="60" cy="100" r="12" fill="#0f172a" stroke="#cbd5e1" stroke-width="2"/>
+            <text x="60" y="130" fill="#94a3b8" font-size="10" text-anchor="middle">10MHz IN</text>
+
+            <circle cx="120" cy="100" r="12" fill="#0f172a" stroke="#cbd5e1" stroke-width="2"/>
+            <text x="120" y="130" fill="#94a3b8" font-size="10" text-anchor="middle">10MHz OUT</text>
+
+            <rect x="170" y="90" width="28" height="20" rx="2" fill="#0f172a" stroke="#f39800" stroke-width="2"/>
+            <text x="184" y="130" fill="#f39800" font-size="10" text-anchor="middle">LAN (.155)</text>
+
+            <rect x="230" y="92" width="22" height="16" rx="2" fill="#0f172a" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="241" y="130" fill="#94a3b8" font-size="10" text-anchor="middle">USB</text>
+
+            <rect x="280" y="90" width="20" height="20" rx="2" fill="#334155" stroke="#cbd5e1" stroke-width="1.5"/>
+            <text x="290" y="130" fill="#94a3b8" font-size="10" text-anchor="middle">AC电源</text>
+
+            <rect x="470" y="20" width="260" height="75" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1.5"/>
+            <text x="600" y="42" fill="#f8fafc" font-size="12" font-weight="600" text-anchor="middle">主测示波器 (SDS5000X)</text>
+            <circle cx="510" cy="65" r="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+            <text x="510" y="85" fill="#38bdf8" font-size="9" text-anchor="middle">CH1</text>
+            <rect x="700" y="55" width="16" height="12" rx="1" fill="#1e293b" stroke="#38bdf8" stroke-width="1"/>
+            <text x="708" y="78" fill="#94a3b8" font-size="9" text-anchor="middle">USB</text>
+
+            <rect x="470" y="115" width="260" height="75" rx="6" fill="#0f172a" stroke="#475569" stroke-width="1.5"/>
+            <text x="600" y="137" fill="#f8fafc" font-size="12" font-weight="600" text-anchor="middle">函数任意波发生器 (SDG6052)</text>
+            <circle cx="510" cy="160" r="8" fill="#1e293b" stroke="#f39800" stroke-width="1.5"/>
+            <text x="510" y="180" fill="#f39800" font-size="9" text-anchor="middle">CH1</text>
+            <circle cx="560" cy="160" r="8" fill="#1e293b" stroke="#f39800" stroke-width="1.5"/>
+            <text x="560" y="180" fill="#f39800" font-size="9" text-anchor="middle">CH2</text>
+
+            <path d="M 120 88 Q 120 65, 502 65" fill="none" stroke="#38bdf8" stroke-width="2" stroke-dasharray="4"/>
+            <path d="M 184 90 L 184 15 L 390 15" fill="none" stroke="#f39800" stroke-width="2.5"/>
+            <text x="395" y="18" fill="#f39800" font-size="10" font-weight="700">车间千兆局域网 (脚本直连 .155)</text>
+            <path d="M 502 160 Q 300 160, 60 112" fill="none" stroke="#fbbf24" stroke-width="1.5"/>
+          </svg>
+          <div class="diagram-caption">图 4-1：SSG6000 射频信号源出厂质检台面接线拓扑示意图</div>
+        </div>
+
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>10MHz 外参考与外部调制换线测试</strong>：按提示连接 SDG6052 信号源与示波器 CH1，测试通过。</div>
+        </div>
+
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>已知 Bug 放行核验</strong>：U 盘 3 个图标确认正常放行；外调制时序偶发不过已记录放行。</div>
+        </div>
+
+        <div class="callout callout-rule">
+          <div class="callout-tag">
+            <span class="status-dot dot-success"></span>
+            RELEASE CRITERIA · 两大已知“假报错”识别与放行规则
+          </div>
+          <p><strong>1. U 盘接口测试报错 (USB Test Fail)：</strong>属于自动化脚本底层通信已知 Bug，测试有较大概率误报测不过。<strong>判定放行规范：</strong>只要质检员进入待测机本地文件系统，<strong>能确认看到 3 个 U 盘挂载图标</strong>，即代表物理端口完好，<strong>直接判定合格放行</strong>，该项不上传云端不良。</p>
+          <p><strong>2. 外调制测试偶发跑不过：</strong>属于已知测试环境时序 Bug。在确认硬件接线完全无误的情况下，无需反复拔插重复测试，已与工程师确认报备，直接放行进入下一步。</p>
+        </div>
+      </section>
+
+      <!-- 第五节 -->
+      <section class="section-card" id="sec-5">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-index">05</div>
+            <h2 class="section-title">第四阶段：出厂文件清理与底层配置校准</h2>
+          </div>
+          <button class="btn-section-pass" onclick="passSection('sec-5')">⚡ 本节全检通过</button>
+        </div>
+
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>开机次数重置联动清理</strong>：重置开机次数后，系统自动清空调试临时垃圾文件，无需逐一手动删除。</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>常驻系统快照文件确认</strong>：清空后每十来秒自动生成的覆盖配置文件属于正常底层快照，无需理会。</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>交付波形目录核实</strong>：打开 <code>82A-1/IQ</code> 模型文件夹，逐一点数确认必须为 <strong>8 个文件</strong>。</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>波形文件夹容量核实</strong>：属性容量大小必须锁定为 <strong>261.77 MB</strong>（若缺失必须找小胖重灌）。</div>
+        </div>
+      </section>
+
+      <!-- 第六节 -->
+      <section class="section-card" id="sec-6">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-index">06</div>
+            <h2 class="section-title">第五阶段：选件授权、出厂复位与硬件自检</h2>
+          </div>
+          <button class="btn-section-pass" onclick="passSection('sec-6')">⚡ 本节全检通过</button>
+        </div>
+
+        <h3>6.1 选件（Option）重置与 U 盘插拔铁律</h3>
+        <p>拔掉所有普通数据 U 盘，<strong>只能单独插入专用选件 U 盘</strong>，进入 <code>Utility &rarr; Option</code> 点击重置恢复试用或正式授权。</p>
+
+        <!-- 内置 60 秒实操倒计时器 -->
+        <div class="timer-card">
+          <div class="timer-info">
+            <h4>⏱️ 选件固化 60 秒倒计时器</h4>
+            <p>重置点击后必须插满 1 分钟！若小于 1 分钟拔出，底层授权固化失败，设置彻底白费！</p>
+          </div>
+          <div class="timer-display-group">
+            <div class="timer-digit" id="timerCount">60s</div>
+            <button class="timer-btn" id="timerBtn" onclick="startOptionTimer()">开始 60s 计时</button>
+          </div>
+        </div>
+
+        <h3>6.2 Utility 出厂设置全面复核</h3>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>Factory Reset</strong>：执行工厂出厂复位（复位后检查网口是否恢复默认）。</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>系统语言与屏保</strong>：语言设为 <code>English</code>；屏保设 10s 验证息屏正常后关闭屏保。</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>自启动与时间</strong>：关闭通电自动开机；校准系统时钟与北京时间误差在 <strong>&plusmn;5 分钟以内</strong>。</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>日志清空与 MAC</strong>：进入 <code>Log List</code> 全部清空；核实以太网 MAC 地址芯片正常（尾号 74）。</div>
+        </div>
+
+        <h3>6.3 运行整机自检程序 (Self Test)</h3>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>LED & 按键旋钮</strong>：运行 LED Test 确认 Mod/RF 灯变色点亮；Key Test 全键通过。</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>Board Test & 风扇</strong>：硬件自检显示全部 Pass；手感确认后侧/侧面散热风扇正常运转出风。</div>
+        </div>
+      </section>
+
+      <!-- 第七节 -->
+      <section class="section-card" id="sec-7">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-index">07</div>
+            <h2 class="section-title">第六阶段：外观防护、包装与系统过站流程</h2>
+          </div>
+          <button class="btn-section-pass" onclick="passSection('sec-7')">⚡ 本节全检通过</button>
+        </div>
+
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>接口保护与封签</strong>：前后面板所有暴露射频头与 BNC 口<strong>套上黑色橡胶保护帽</strong>；提手左侧贴<strong>防拆易碎标签</strong>。</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>数磊 QCS 系统过站</strong>：<code>FQC 检验 &rarr; 扫描选 LPN &rarr; 全选项目 &rarr; 批量合格 &rarr; 审核确认</code>。</div>
+        </div>
+        <div class="check-item" onclick="toggleCheck(this)">
+          <div class="check-box"><svg class="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+          <div class="check-text"><strong>8S 扣机挂载与云平台填单</strong>：扫描序列号回车挂载成功；在鼎阳云平台填报电子出厂检查单并留存版本。</div>
+        </div>
+      </section>
+
+      <!-- 第八节 -->
+      <section class="section-card" id="sec-8">
+        <div class="section-header">
+          <div class="section-header-left">
+            <div class="section-index">08</div>
+            <h2 class="section-title">核心附录：口诀与权责矩阵</h2>
+          </div>
+        </div>
+
+        <!-- 避坑口诀海报卡片 -->
+        <div class="poster-box">
+          <div class="poster-header">
+            <h3>🔥 鼎阳质检新人“六避坑”速记金句</h3>
+            <span style="font-size: 11px; color: var(--siglent-orange); font-weight: 700;">MEMORIZE THESE RULES</span>
+          </div>
+          <div class="poster-content">
+            <div class="rhyme-item"><strong>01.</strong> 后盖板子手别摸，留印受损难合格。</div>
+            <div class="rhyme-item"><strong>02.</strong> 自动化跑只走网，静态 IP 尾幺五五。</div>
+            <div class="rhyme-item"><strong>03.</strong> 脚本全选摘网测，否则断连当场瘫。</div>
+            <div class="rhyme-item"><strong>04.</strong> 优盘报错莫慌张，文件看齐三图标。</div>
+            <div class="rhyme-item"><strong>05.</strong> 出厂波形数八个，大小锁定二六一。</div>
+            <div class="rhyme-item"><strong>06.</strong> 选件重置插满分，拔早前功全尽弃。</div>
+          </div>
+        </div>
+
+        <h3>8.2 异常判定与处理权责矩阵</h3>
+        <p>质检员需坚决遵守质量权责边界，严禁擅自报废或随意更换器件：</p>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 15%;">异常级别</th>
+                <th style="width: 32%;">涉及部件与故障现象</th>
+                <th style="width: 35%;">质检员现场规范动作</th>
+                <th style="width: 18%;">签字确认人</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="status-dot dot-success"></span><strong>轻微耗材类</strong></td>
+                <td>脚垫松动滑丝、保护胶帽缺失、提手轻微擦痕、标签起泡折角</td>
+                <td><strong>自主闭环：</strong>现场领料后紧固螺丝或重新更换贴附。</td>
+                <td>质检员自检确认</td>
+              </tr>
+              <tr>
+                <td><span class="status-dot dot-warning"></span><strong>工程代用类</strong></td>
+                <td>后盖板款式（新 2U / 老 1U）与工单物料编码不符</td>
+                <td><strong>暂停过站：</strong>查工单“生产备注”。有工程代用说明可放行；无说明严禁私自放行，上报段长。</td>
+                <td>生产主管 / 结构工程师</td>
+              </tr>
+              <tr>
+                <td><span class="status-dot dot-warning"></span><strong>出厂数据类</strong></td>
+                <td>出厂 IQ 模型文件夹缺失、文件不足 8 个、容量非 261.77MB</td>
+                <td><strong>拦截下线：</strong>严禁出厂，整机打回调试工位。</td>
+                <td>调试员（小胖）重新灌装</td>
+              </tr>
+              <tr>
+                <td><span class="status-dot dot-danger"></span><strong style="color: var(--danger);">贵重元器件类</strong></td>
+                <td><strong>继电器无动作响声</strong>（仅灯切无机械清脆声/万用表不通）、高频端口无输出、硬件自检报错 Fail</td>
+                <td><strong>严禁私自报废或直接换件！</strong>（属于昂贵电子元器件来料不良，涉及向供应商追溯与索赔）</td>
+                <td><strong>工程/品质主管（如陈工、李工）现场复核签字</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 打印专属签字页 -->
+        <div class="print-sign-box">
+          <table style="border: 1px solid #000; width: 100%;">
+            <tr>
+              <td style="border: 1px solid #000; padding: 10px;"><strong>检验机台 SN：</strong><span id="printSN">_______________________</span></td>
+              <td style="border: 1px solid #000; padding: 10px;"><strong>检验日期：</strong> 2026 年 ___ 月 ___ 日</td>
+            </tr>
+            <tr>
+              <td style="border: 1px solid #000; padding: 10px;"><strong>FQC 检验员签名：</strong>________________</td>
+              <td style="border: 1px solid #000; padding: 10px;"><strong>工程/品质复核签名：</strong>________________</td>
+            </tr>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- 浮动 Toast 容器 -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script>
+// 质检打卡系统 - 严谨生产级 JavaScript
+
+// 1. 单项打卡触发
+function toggleCheck(el) {
+  if (!el) return;
+  el.classList.toggle('checked');
+  saveChecklistState();
+  updateProgress();
+}
+
+// 2. 本节全检通过
+function passSection(sectionId) {
+  var sec = document.getElementById(sectionId);
+  if (!sec) return;
+  var items = sec.querySelectorAll('.check-item');
+  items.forEach(function(item) {
+    item.classList.add('checked');
+  });
+  saveChecklistState();
+  updateProgress();
+  showToast('该阶段检验项已全部标记通过！', false);
+}
+
+// 3. 页面加载初始化
+document.addEventListener('DOMContentLoaded', function() {
+  var savedSN = localStorage.getItem('siglent_qc_sn') || '';
+  var snInput = document.getElementById('snInput');
+  var printSN = document.getElementById('printSN');
+  if (snInput && savedSN) {
+    snInput.value = savedSN;
+  }
+  if (printSN && savedSN) {
+    printSN.innerText = savedSN;
+  }
+  loadChecklistState();
+});
+
+// 保存当前输入的 SN
+function saveCurrentSN() {
+  var snInput = document.getElementById('snInput');
+  var sn = snInput ? snInput.value.trim() : '';
+  localStorage.setItem('siglent_qc_sn', sn);
+  var printSN = document.getElementById('printSN');
+  if (printSN) {
+    printSN.innerText = sn || '_______________________';
+  }
+}
+
+// Toast 浮动提示通知
+function showToast(msg, isOrange) {
+  var container = document.getElementById('toastContainer');
+  if (!container) return;
+  var toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.style.borderLeftColor = isOrange ? 'var(--siglent-orange)' : 'var(--success)';
+  toast.innerHTML = '<span>⚡</span> <span>' + msg + '</span>';
+  container.appendChild(toast);
+  setTimeout(function() {
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(10px)';
+    toast.style.transition = 'all 0.25s ease';
+    setTimeout(function() { toast.remove(); }, 250);
+  }, 2600);
+}
+
+// 更新进度条与状态徽章
+function updateProgress() {
+  var items = document.querySelectorAll('.check-item');
+  var checked = document.querySelectorAll('.check-item.checked');
+  var total = items.length;
+  var done = checked.length;
+  var pct = total > 0 ? Math.round((done / total) * 100) : 0;
+
+  var progressText = document.getElementById('progressText');
+  var progressBar = document.getElementById('progressBar');
+  var badge = document.getElementById('statusBadge');
+
+  if (progressText) {
+    progressText.innerText = done + ' / ' + total + ' 项 (' + pct + '%)';
+  }
+  if (progressBar) {
+    progressBar.style.width = pct + '%';
+  }
+
+  if (badge) {
+    if (done === total && total > 0) {
+      badge.innerText = '✅ 全部合格';
+      badge.style.background = 'var(--success)';
+    } else {
+      badge.innerText = '检验中';
+      badge.style.background = 'var(--siglent-blue)';
+    }
+  }
+}
+
+// 本地存储打卡状态
+function saveChecklistState() {
+  var items = document.querySelectorAll('.check-item');
+  var states = Array.from(items).map(function(item) {
+    return item.classList.contains('checked');
+  });
+  localStorage.setItem('siglent_qc_items', JSON.stringify(states));
+}
+
+function loadChecklistState() {
+  var saved = localStorage.getItem('siglent_qc_items');
+  if (saved) {
+    try {
+      var states = JSON.parse(saved);
+      var items = document.querySelectorAll('.check-item');
+      items.forEach(function(item, idx) {
+        if (states[idx]) {
+          item.classList.add('checked');
+        } else {
+          item.classList.remove('checked');
+        }
+      });
+    } catch(e) {}
+  }
+  updateProgress();
+}
+
+// 重置打卡或下一台
+function resetChecklist() {
+  var confirmMsg = '确认完成当前台账并重置打卡？（将清空所有勾选并准备检验下一台设备）';
+  if (confirm(confirmMsg)) {
+    document.querySelectorAll('.check-item').forEach(function(el) {
+      el.classList.remove('checked');
+    });
+    var snInput = document.getElementById('snInput');
+    if (snInput) snInput.value = '';
+    saveCurrentSN();
+    saveChecklistState();
+    updateProgress();
+    showToast('已重置打卡，请扫码录入下一台待测机 SN', false);
+  }
+}
+
+// 复制合格凭证报告
+function exportReport() {
+  var snInput = document.getElementById('snInput');
+  var sn = snInput && snInput.value.trim() ? snInput.value.trim() : '未录入SN';
+  var items = document.querySelectorAll('.check-item');
+  var checked = document.querySelectorAll('.check-item.checked');
+  var total = items.length;
+  var done = checked.length;
+  var status = (done === total && total > 0) ? '【检验合格 PASS】' : '【检验未完成 INCOMPLETE】';
+  var newline = String.fromCharCode(10);
+  
+  var lines = [
+    '【鼎阳科技 SSG6000 FQC 检验电子凭证】',
+    '机台 SN: ' + sn,
+    '检验工序: FQC 出厂品质检验',
+    '完成状态: ' + status + ' (' + done + '/' + total + ' 项已通过)',
+    '检验标准: SGL-QC-SOP-6080A',
+    '检验日期: ' + new Date().toLocaleDateString(),
+    '检验员状态: 现场实测合格已确认'
+  ];
+  var text = lines.join(newline);
+
+  navigator.clipboard.writeText(text).then(function() {
+    showToast('已成功复制检验报告凭据，可直接粘贴！', false);
+  }).catch(function() {
+    alert(text);
+  });
+}
+
+// 选件 U 盘 60 秒倒计时器
+var timerInterval = null;
+function startOptionTimer() {
+  var timeLeft = 60;
+  var digit = document.getElementById('timerCount');
+  var btn = document.getElementById('timerBtn');
+  if (btn) {
+    btn.disabled = true;
+    btn.style.opacity = '0.6';
+  }
+  
+  clearInterval(timerInterval);
+  showToast('选件重置 60 秒倒计时已启动，请勿拔出 U 盘！', true);
+  
+  timerInterval = setInterval(function() {
+    timeLeft--;
+    if (digit) digit.innerText = timeLeft + 's';
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      if (digit) {
+        digit.innerText = '✅ 完成';
+        digit.style.color = '#4ade80';
+      }
+      if (btn) {
+        btn.innerText = '固化完成，可拔出';
+        btn.disabled = false;
+        btn.style.opacity = '1';
+      }
+      playBeep();
+      showToast('🎉 选件 U 盘已插满 60 秒，底层授权已成功固化，可以安全拔出！', false);
+    }
+  }, 1000);
+}
+
+// 简易 Web Audio 蜂鸣声
+function playBeep() {
+  try {
+    var AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    var ctx = new AudioCtx();
+    var osc = ctx.createOscillator();
+    var gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.frequency.value = 880;
+    gain.gain.value = 0.15;
+    osc.start();
+    setTimeout(function() { osc.stop(); ctx.close(); }, 300);
+  } catch(e) {}
+}
+
+// 快速复制参数
+function copyValue(val) {
+  navigator.clipboard.writeText(val).then(function() {
+    showToast('已复制参数至剪贴板: ' + val, false);
+  }).catch(function() {
+    alert('参数: ' + val);
+  });
+}
+
+// 搜索过滤
+function filterContent() {
+  var filterInput = document.getElementById('filterInput');
+  var query = filterInput ? filterInput.value.toLowerCase() : '';
+  var sections = document.querySelectorAll('.section-card');
+  
+  sections.forEach(function(section) {
+    var text = section.innerText.toLowerCase();
+    if (text.includes(query)) {
+      section.style.display = '';
+    } else {
+      section.style.display = 'none';
+    }
+  });
+}
+
+// 明暗主题切换
+function toggleTheme() {
+  var htmlEl = document.documentElement;
+  var current = htmlEl.getAttribute('data-theme');
+  var next = current === 'dark' ? 'light' : 'dark';
+  htmlEl.setAttribute('data-theme', next);
+  var themeToggle = document.getElementById('themeToggle');
+  if (themeToggle) {
+    themeToggle.innerText = next === 'dark' ? '☀️ 切换浅色模式' : '🌙 切换暗色模式';
+  }
+}
+
+  </script>
+</body>
+</html>
